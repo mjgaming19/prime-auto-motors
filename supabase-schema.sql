@@ -59,7 +59,7 @@ for select to authenticated using (owner_id = (select auth.uid()));
 create or replace function public.complete_sale(p_items jsonb, p_customer text default 'Walk-in customer')
 returns jsonb
 language plpgsql
-security invoker
+security definer
 set search_path = public
 as $$
 declare
@@ -124,4 +124,5 @@ begin
 end;
 $$;
 
+revoke execute on function public.complete_sale(jsonb, text) from public, anon;
 grant execute on function public.complete_sale(jsonb, text) to authenticated;
