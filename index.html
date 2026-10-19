@@ -18,7 +18,7 @@ body.auth-locked header,body.auth-locked main{display:none!important}
     <img src="logo.png" alt="Prime Auto Motors logo" style="display:block;max-width:180px;max-height:72px;object-fit:contain;object-position:left;margin-bottom:18px">
     <h1>Prime Auto Motors</h1>
     <p>Sign in to open the shop manager.</p>
-    <form id="authForm" onsubmit="event.preventDefault()">
+    <form id="authForm" onsubmit="return false;">
       <label>Email address<input id="authEmail" type="email" autocomplete="username" required placeholder="you@example.com"></label>
       <label>Password<input id="authPassword" type="password" autocomplete="current-password" required placeholder="Enter your password"></label>
       <button id="authSubmit" type="submit">Sign in</button>
@@ -68,7 +68,7 @@ async function initializeAuth(){
   }
   authClient=window.supabase.createClient(SUPABASE_URL,SUPABASE_PUBLISHABLE_KEY);
   form.addEventListener('submit',async event=>{
-    event.preventDefault();clearAuthError();submit.disabled=true;submit.textContent='Signing in…';
+    event.preventDefault();event.stopPropagation();clearAuthError();submit.disabled=true;submit.textContent='Signing in…';
     try{
       const email=document.getElementById('authEmail').value.trim();
       const password=document.getElementById('authPassword').value;
