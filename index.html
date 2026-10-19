@@ -115,7 +115,8 @@ async function loadCloudData(){
     receipt.items.push({sku:row.product_code,name:row.product_name,price:Number(row.unit_price)||0,qty:Number(row.quantity)||0});
     receipt.total+=Number(row.total??(Number(row.unit_price)*Number(row.quantity)))||0;
   }
-  const sales=Array.from(grouped.values()).sort((a,b)=>new Date(b.date)-new Date(a.date));\n  for(const sale of sales)for(const item of sale.items){const stockItem=inventory.find(p=>p.sku===item.sku);item.costPrice=Number(stockItem?.costPrice)||0;}
+  const sales=Array.from(grouped.values()).sort((a,b)=>new Date(b.date)-new Date(a.date));
+  for(const sale of sales)for(const item of sale.items){const stockItem=inventory.find(p=>p.sku===item.sku);item.costPrice=Number(stockItem?.costPrice)||0;}
   db={inventory,sales};
   localStorage.setItem(KEY,JSON.stringify(db));
   renderAll();
