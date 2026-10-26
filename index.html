@@ -124,6 +124,7 @@ async function loadCloudData(){
   db={inventory,sales};
   localStorage.setItem(KEY,JSON.stringify(db));
   renderAll();
+  loadSuppliers();
 }
 function subscribeToCloudChanges(){
   if(!authClient||realtimeChannel)return;
