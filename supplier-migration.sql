@@ -14,6 +14,10 @@ create table if not exists public.suppliers (
   updated_at timestamptz not null default now()
 );
 
+-- Link each stock item to the supplier it came from. Existing stock remains valid.
+alter table public.stock
+  add column if not exists supplier_id uuid references public.suppliers(id) on delete set null;
+
 alter table public.suppliers enable row level security;
 
 drop policy if exists "Authenticated users manage suppliers" on public.suppliers;
