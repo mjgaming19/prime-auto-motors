@@ -51,7 +51,7 @@ create policy "Authenticated users manage pending sale payments" on public.pendi
 grant select, insert, update, delete on public.pending_sales to authenticated;
 grant select, insert, update, delete on public.pending_sale_items to authenticated;
 grant select, insert, update, delete on public.pending_sale_payments to authenticated;
-grant usage, select on all sequences in schema public to authenticated;
+grant usage, select on sequence public.pending_sale_items_id_seq, public.pending_sale_payments_id_seq to authenticated;
 
 create or replace function public.create_pending_pos_sale(
   p_sale_id text,
@@ -158,7 +158,9 @@ declare
 begin
   v_sale_id := case when tg_op = 'DELETE' then old.pending_sale_id else new.pending_sale_id end;
   select total_amount into v_total from public.pending_sales where id = v_sale_id;
-  if not found then return coalesce(new,old); end if;
+  if not found then
+    if tg_op = 'DELETE' then return old; else return new; end if;
+  end if;
   select coalesce(sum(amount),0) into v_paid from public.pending_sale_payments where pending_sale_id = v_sale_id;
   update public.pending_sales
      set amount_paid = v_paid,
